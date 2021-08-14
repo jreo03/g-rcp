@@ -1,9 +1,10 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://car.tscn" type="PackedScene" id=1]
 [ext_resource path="res://misc scripts/camera.gd" type="Script" id=2]
 [ext_resource path="res://misc scripts/debug.gd" type="Script" id=3]
 [ext_resource path="res://font.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://assets/sw.png" type="Texture" id=5]
 [ext_resource path="res://misc scripts/surface.gd" type="Script" id=19]
 
 [sub_resource type="DynamicFont" id=1]
@@ -267,6 +268,19 @@ margin_right = 1024.0
 margin_bottom = 324.0
 custom_fonts/font = SubResource( 1 )
 text = "debug"
+
+[node name="sw" type="TextureRect" parent="debug"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -64.0
+margin_top = -150.0
+margin_right = 64.0
+margin_bottom = -22.0
+rect_pivot_offset = Vector2( 64, 64 )
+texture = ExtResource( 5 )
+expand = true
 
 [node name="maps" type="Spatial" parent="."]
 

@@ -411,12 +411,12 @@ func _physics_process(delta):
 			
 			var mass = get_parent().mass/100
 			var unita = 100.0*mass
-			var unitb = 25.0/1
+			var unitb = 35.0/1
 			var unitc = 1.0
 			var unitd = 0.001/(mass/currentgrip)
 			var offsettedzw = (currentgrip*wheelweight)/unita
 			
-			var slip2 = distz3*0.035
+			var slip2 = distz3*(0.1/tyrecompressed)
 			if slip2<0.0:
 				slip2 = 0.0
 #			if name == "rl":
@@ -462,18 +462,23 @@ func _physics_process(delta):
 			if translation.z>0:
 				farz *= -1.0
 				
-			wsing = (farx/2.0) + farz
+			wsing = ((farx/2.0)*1.0) + farz
 			
-			if wsing<sliped:
-				wsing = sliped
+			if wsing<0.0:
+				wsing = 0.0
 			elif wsing>1.0/(groundmaterial +1.0):
 				wsing = 1.0/(groundmaterial +1.0)
 				
 #			print(wsing)
-				
-
-			var method1 = [Vector2(distz2,distx2).length(),Vector2(distz3,distx2).length()]
-			var method2 = [distz2 + distx2 + offsettedz,distz3 + distx2 + offsettedx]
+			var siding = abs((distx2 +(distz2/4.0))/(rayvelocity2velocity +1))*10.0 -limt*0.01
+			if siding<0.0:
+				siding = 0.0
+			elif siding>1:
+				siding = 1
+			
+#			print(siding)
+			var method1 = [Vector2(distz2,distx2*siding).length(),Vector2(distz3*siding,distx2).length()]
+			var method2 = [distz2 + distx2*siding + offsettedz,distz3*siding + distx2 + offsettedx]
 
 			var dampz = 0.0
 			var dampx = 0.0

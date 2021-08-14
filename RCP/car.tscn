@@ -9,25 +9,25 @@
 [ext_resource path="res://assets/blow.ogg" type="AudioStream" id=7]
 [ext_resource path="res://assets/spool.ogg" type="AudioStream" id=8]
 
-[sub_resource type="ConvexPolygonShape" id=22]
+[sub_resource type="ConvexPolygonShape" id=1]
 points = PoolVector3Array( 1.021, -0.066, -2.707, 1.312, 0.246, -1.265, -1.021, -0.066, -2.707, -1.021, -0.066, -2.707, -1.312, 0.246, -1.265, -0.9, -0.336, -2.969, 1.312, 0.246, -1.265, 0.742, 0.769, -0.058, -1.312, 0.246, -1.265, 1.312, 0.335, 2.898, 1.312, 0.246, -1.265, 1.294, -0.336, 2.996, 0.9, -0.336, -2.969, -0.9, -0.336, -2.969, 1.294, -0.336, 2.996, 0.9, -0.336, -2.969, 1.021, -0.066, -2.707, -0.9, -0.336, -2.969, -0.742, 0.769, -0.058, -0.742, 0.777, 1.224, -1.312, 0.246, -1.265, 1.312, 0.335, 2.898, 0.742, 0.777, 1.224, 1.312, 0.246, -1.265, -1.312, 0.246, -1.265, -1.312, 0.335, 2.898, -1.294, -0.336, 2.996, 1.021, -0.066, -2.707, 0.9, -0.336, -2.969, 1.312, 0.246, -1.265, -0.742, 0.777, 1.224, -1.312, 0.335, 2.898, -1.312, 0.246, -1.265, 0.742, 0.777, 1.224, 0.742, 0.769, -0.058, 1.312, 0.246, -1.265, -1.294, -0.336, 2.996, -1.312, 0.335, 2.898, 1.294, -0.336, 2.996, -1.312, 0.335, 2.898, -0.742, 0.777, 1.224, 1.312, 0.335, 2.898, -1.312, 0.246, -1.265, -1.294, -0.336, 2.996, -0.9, -0.336, -2.969, 0.9, -0.336, -2.969, 1.294, -0.336, 2.996, 1.312, 0.246, -1.265, -0.742, 0.769, -0.058, 0.742, 0.769, -0.058, -0.742, 0.777, 1.224, -1.312, 0.246, -1.265, -0.742, 0.769, -0.058, -1.294, -0.336, 2.996, -1.021, -0.066, -2.707, 1.312, 0.335, 2.898, 0.742, 0.777, 1.224, 0.742, 0.777, 1.224 )
 
-[sub_resource type="BoxShape" id=23]
+[sub_resource type="BoxShape" id=2]
 extents = Vector3( 0.1, 0.1, 0.1 )
 
-[sub_resource type="PointMesh" id=24]
+[sub_resource type="PointMesh" id=3]
 
-[sub_resource type="CubeMesh" id=25]
+[sub_resource type="CubeMesh" id=4]
 size = Vector3( 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=26]
+[sub_resource type="SpatialMaterial" id=5]
 flags_unshaded = true
 flags_no_depth_test = true
 
-[sub_resource type="CubeMesh" id=27]
+[sub_resource type="CubeMesh" id=6]
 size = Vector3( 1, 1, 1 )
 
-[sub_resource type="BoxShape" id=28]
+[sub_resource type="BoxShape" id=7]
 extents = Vector3( 1.3, 0.5, 3 )
 
 [sub_resource type="SpatialMaterial" id=8]
@@ -35,7 +35,7 @@ resource_name = "Wheels.000"
 albedo_texture = ExtResource( 3 )
 metallic = 1.0
 
-[sub_resource type="ArrayMesh" id=29]
+[sub_resource type="ArrayMesh" id=9]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.00444188, -0.00946395, -0.00946395, 0.00688376, 0.0189279, 0.0189279 ),
@@ -52,9 +52,9 @@ surfaces/0 = {
 }
 
 [sub_resource type="SpatialMaterial" id=10]
-resource_name = "Color"
-albedo_color = Color( 0.7, 0, 0, 1 )
-metallic = 1.0
+albedo_color = Color( 0.698039, 0, 0, 1 )
+metallic_specular = 1.0
+roughness = 0.5
 
 [sub_resource type="SpatialMaterial" id=11]
 resource_name = "Outline.001"
@@ -106,7 +106,7 @@ metallic = 1.0
 [sub_resource type="SpatialMaterial" id=21]
 resource_name = "Window.001"
 
-[sub_resource type="ArrayMesh" id=30]
+[sub_resource type="ArrayMesh" id=22]
 blend_shape_mode = 0
 surfaces/0 = {
 "aabb": AABB( -0.0346621, -0.0607592, -0.00331825, 0.0693243, 0.122776, 0.0348731 ),
@@ -274,11 +274,11 @@ script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.237, 0 )
-shape = SubResource( 22 )
+shape = SubResource( 1 )
 
 [node name="distribution" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 750 )
-shape = SubResource( 23 )
+shape = SubResource( 2 )
 disabled = true
 
 [node name="fr" type="RayCast" parent="."]
@@ -287,20 +287,20 @@ enabled = true
 script = ExtResource( 1 )
 
 [node name="geometry" type="MeshInstance" parent="fr"]
-mesh = SubResource( 24 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="compress" type="MeshInstance" parent="fr/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="lateral" type="MeshInstance" parent="fr/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="longi" type="MeshInstance" parent="fr/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="axis" type="Position3D" parent="fr"]
 visible = false
@@ -320,12 +320,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="fr/velocity"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="fr/velocity"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="velocity2" type="RigidBody" parent="fr"]
@@ -341,12 +341,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="fr/velocity2"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="fr/velocity2"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="animation" type="Position3D" parent="fr"]
@@ -355,7 +355,7 @@ disabled = true
 
 [node name="Cylinder2" type="MeshInstance" parent="fr/animation/spinning"]
 transform = Transform( 54, 0, 0, 0, -2.36042e-06, 54, 0, -54, -2.36042e-06, 0, 0, 0 )
-mesh = SubResource( 29 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="fl" type="RayCast" parent="."]
@@ -364,20 +364,20 @@ enabled = true
 script = ExtResource( 1 )
 
 [node name="geometry" type="MeshInstance" parent="fl"]
-mesh = SubResource( 24 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="compress" type="MeshInstance" parent="fl/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="lateral" type="MeshInstance" parent="fl/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="longi" type="MeshInstance" parent="fl/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="axis" type="Position3D" parent="fl"]
 visible = false
@@ -397,12 +397,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="fl/velocity"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="fl/velocity"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="velocity2" type="RigidBody" parent="fl"]
@@ -418,12 +418,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="fl/velocity2"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="fl/velocity2"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="animation" type="Position3D" parent="fl"]
@@ -432,7 +432,7 @@ disabled = true
 
 [node name="Cylinder2" type="MeshInstance" parent="fl/animation/spinning"]
 transform = Transform( -54, 8.15377e-06, 3.56413e-13, 0, -2.36042e-06, 54, 8.15377e-06, 54, 2.36042e-06, 0, 0, 0 )
-mesh = SubResource( 29 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="rr" type="RayCast" parent="."]
@@ -441,20 +441,20 @@ enabled = true
 script = ExtResource( 1 )
 
 [node name="geometry" type="MeshInstance" parent="rr"]
-mesh = SubResource( 24 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="compress" type="MeshInstance" parent="rr/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="lateral" type="MeshInstance" parent="rr/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="longi" type="MeshInstance" parent="rr/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="axis" type="Position3D" parent="rr"]
 visible = false
@@ -474,12 +474,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="rr/velocity"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="rr/velocity"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="velocity2" type="RigidBody" parent="rr"]
@@ -495,12 +495,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="rr/velocity2"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="rr/velocity2"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="animation" type="Position3D" parent="rr"]
@@ -509,7 +509,7 @@ disabled = true
 
 [node name="Cylinder2" type="MeshInstance" parent="rr/animation/spinning"]
 transform = Transform( 54, 0, 0, 0, -2.36042e-06, 54, 0, -54, -2.36042e-06, 0, 0, 0 )
-mesh = SubResource( 29 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="rl" type="RayCast" parent="."]
@@ -518,20 +518,20 @@ enabled = true
 script = ExtResource( 1 )
 
 [node name="geometry" type="MeshInstance" parent="rl"]
-mesh = SubResource( 24 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="compress" type="MeshInstance" parent="rl/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="lateral" type="MeshInstance" parent="rl/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="longi" type="MeshInstance" parent="rl/geometry"]
-mesh = SubResource( 25 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
 
 [node name="axis" type="Position3D" parent="rl"]
 visible = false
@@ -551,12 +551,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="rl/velocity"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="rl/velocity"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="velocity2" type="RigidBody" parent="rl"]
@@ -572,12 +572,12 @@ linear_damp = 0.0
 angular_damp = 0.0
 
 [node name="MeshInstance" type="MeshInstance" parent="rl/velocity2"]
-mesh = SubResource( 27 )
+mesh = SubResource( 6 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="rl/velocity2"]
 transform = Transform( 1, 0, -1.49012e-08, 0, 1, 0, 1.49012e-08, 0, 1, 0, 0, 0 )
-shape = SubResource( 28 )
+shape = SubResource( 7 )
 disabled = true
 
 [node name="animation" type="Position3D" parent="rl"]
@@ -586,12 +586,12 @@ disabled = true
 
 [node name="Cylinder" type="MeshInstance" parent="rl/animation/spinning"]
 transform = Transform( -54, 8.15377e-06, 3.56413e-13, 0, -2.36042e-06, 54, 8.15377e-06, 54, 2.36042e-06, 0, 0, 0 )
-mesh = SubResource( 29 )
+mesh = SubResource( 9 )
 material/0 = null
 
 [node name="carmesh" type="MeshInstance" parent="."]
 transform = Transform( -50, 4.37114e-06, 1.91069e-13, 0, -2.18557e-06, 50, 4.37114e-06, 50, 2.18557e-06, 0, -1, 0 )
-mesh = SubResource( 30 )
+mesh = SubResource( 22 )
 material/0 = null
 material/1 = null
 material/2 = null
