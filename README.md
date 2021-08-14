@@ -16,7 +16,7 @@ There are comments within the scripts which may help. Further instructions on ho
 ### Updates
 * Improved stability for rear-drive cars.
 * Added turbo sounds.
-* Added steering wheel to determine steering value.
+* Added on-screen steering wheel to determine steering value.
 
 ### Current Acknowledged Issues
 * Tyre deflection on stop is sluggish.
