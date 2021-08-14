@@ -15,6 +15,7 @@ Red car model by shutmen_16#6802 on discord
 
 ### Updates
 Improved stability for rear-drive cars.
+Added turbo sounds.
 
 ### Current Acknowledged Issues
 Tyre deflection on stop is sluggish.
