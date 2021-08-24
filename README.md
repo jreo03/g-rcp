@@ -20,3 +20,4 @@ There are comments within the scripts which may help. Further instructions on ho
 
 ### Current Acknowledged Issues
 * Tyre deflection on stop is sluggish.
+* Colliding with another car by the wheel throws an error.
