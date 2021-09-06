@@ -14,7 +14,7 @@ There are comments within the scripts which may help. Further instructions on ho
 * Red car model by shutmen_16#6802 on discord
 
 ### Updates
-* Minor tyre physics update
+* Minor tyre physics correction
 
 ### Current Acknowledged Issues
 * Incompatible with Bullet physics.
