@@ -10,7 +10,7 @@ config_version=4
 
 [application]
 
-config/name="\"Realistic\" Car Physics Port"
+config/name="\"Realistic\" Car Physics"
 run/main_scene="res://world.tscn"
 config/icon="res://icon.png"
 

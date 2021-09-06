@@ -195,6 +195,8 @@ light_bake_mode = 0
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( -0.637413, -0.139092, 0.757864, 0, 0.983572, 0.180517, -0.770523, 0.115064, -0.626941, 6.4624, 3.05203, -17.5528 )
+doppler_tracking = 2
+current = true
 near = 0.1
 far = 10000.0
 script = ExtResource( 2 )
@@ -281,6 +283,9 @@ margin_bottom = -22.0
 rect_pivot_offset = Vector2( 64, 64 )
 texture = ExtResource( 5 )
 expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="maps" type="Spatial" parent="."]
 

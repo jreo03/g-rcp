@@ -40,6 +40,7 @@ var FinalDriveRatio = 4.25
 var GearRatios = [ 3.250, 1.894, 1.259, 0.937, 0.771 ]
 var ReverseRatio = 3.153
 var RatioMult = 9.5 # FinalDriveRatio multiplier to find accuracy.
+var ShiftClutchOff = 0.75
 
 #power-to-wheel
 var PowerToWheel = 0.9 # Amount of torque being sent to the wheels upon higher gear ratio. (Keep untouched recommended)
@@ -148,7 +149,7 @@ var su = false
 var sd = false
 
 #misc
-var groundmaterial = 0.0
+var cgroundmaterial = 0.0
 var wheelsforce = 0.0
 
 var absflashed = false
@@ -177,8 +178,10 @@ func _ready():
 
 #	get_node("fl").set("SteerAngle_Left",50.0)
 #	get_node("fl").set("SteerAngle_Right",50.0)
-#	get_node("fr").set("SteerAngle_Left",50.0)
-#	get_node("fr").set("SteerAngle_Right",50.0)
+#	get_node("fr").set("SteerAngle_Left",0.0)
+#	get_node("fr").set("SteerAngle_Right",0.0)
+#	get_node("rl").set("SteerAngle_Left",50.0)
+#	get_node("rl").set("SteerAngle_Right",50.0)
 
 #	get_node("rl").set("tyre_code","1150-195-060-14-060")
 #	get_node("rr").set("tyre_code","1150-195-060-14-060")
@@ -415,12 +418,12 @@ func _physics_process(delta):
 			
 			
 	if gear<len(GearRatios):
-		if su and clutchon<0.5 or su and GearAssistant[1]>0:
+		if su and clutchon<ShiftClutchOff or su and GearAssistant[1]>0:
 			if GearAssistant[1]>0 and not gear<1:
 				shiftdel = GearAssistant[0]
 			gear += 1
 	if gear>-1:
-		if sd and clutchon<0.5 or sd and GearAssistant[1]>0:
+		if sd and clutchon<ShiftClutchOff or sd and GearAssistant[1]>0:
 			gear -= 1
 		
 		
@@ -510,8 +513,10 @@ func _physics_process(delta):
 	dsweight = 0.0
 			
 	#misc
+	var soundvolume = 1.0
+	
 	get_node("engine").pitch_scale = abs(rpm)/5430.0
-	get_node("engine").unit_db = linear2db(throttle*0.25 +0.75)
+	get_node("engine").unit_db = linear2db((throttle*0.5 +0.5)*soundvolume)
 	get_node("engine").max_db = get_node("engine").unit_db
 	
 	var skikd = skidding2/25.0 -0.5
@@ -521,14 +526,14 @@ func _physics_process(delta):
 		skikd = 1.0
 			
 	if wheelsonground>0:
-		groundmaterial /= float(wheelsonground)
+		cgroundmaterial /= float(wheelsonground)
 		wheelsforce /= float(wheelsonground)
 
 		if wheelsforce>100.0:
 			wheelsforce = 100.0
 		get_node("skid").pitch_scale = 0.7 +skikd*0.25
-		get_node("skid").unit_db = linear2db((skikd/1.5)*(1.0-groundmaterial))
-		get_node("dirt").unit_db = linear2db((wheelsforce/100.0)*groundmaterial)
+		get_node("skid").unit_db = linear2db(((skikd/1.5)*(1.0-cgroundmaterial))*soundvolume)
+		get_node("dirt").unit_db = linear2db(((wheelsforce/100.0)*cgroundmaterial)*soundvolume)
 		get_node("dirt").pitch_scale = 1.0 +wheelsforce/100.0
 	else:
 		get_node("skid").unit_db = linear2db(0)
@@ -540,7 +545,7 @@ func _physics_process(delta):
 	skidding = 0.0
 	skidding2 = 0.0	
 	
-	groundmaterial = 0.0
+	cgroundmaterial = 0.0
 	wheels = 0
 	wheelsonground = 0
 	wheelsforce = 0.0
@@ -567,8 +572,8 @@ func _physics_process(delta):
 		spoolvol = 1
 	
 		
-	get_node("blow").unit_db = linear2db(blowvol*turbovolume)
-	get_node("spool").unit_db = linear2db((spoolvol*1.5)*turbovolume)
+	get_node("blow").unit_db = linear2db((blowvol*turbovolume)*soundvolume)
+	get_node("spool").unit_db = linear2db(((spoolvol*1.5)*turbovolume)*soundvolume)
 	get_node("spool").pitch_scale = 0.8 +spoolvol*0.5
 		
 	get_node("blow").max_db = get_node("blow").unit_db
