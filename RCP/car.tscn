@@ -12,6 +12,9 @@
 [sub_resource type="ConvexPolygonShape" id=1]
 points = PoolVector3Array( 1.021, -0.066, -2.707, 1.312, 0.246, -1.265, -1.021, -0.066, -2.707, -1.021, -0.066, -2.707, -1.312, 0.246, -1.265, -0.9, -0.336, -2.969, 1.312, 0.246, -1.265, 0.742, 0.769, -0.058, -1.312, 0.246, -1.265, 1.312, 0.335, 2.898, 1.312, 0.246, -1.265, 1.294, -0.336, 2.996, 0.9, -0.336, -2.969, -0.9, -0.336, -2.969, 1.294, -0.336, 2.996, 0.9, -0.336, -2.969, 1.021, -0.066, -2.707, -0.9, -0.336, -2.969, -0.742, 0.769, -0.058, -0.742, 0.777, 1.224, -1.312, 0.246, -1.265, 1.312, 0.335, 2.898, 0.742, 0.777, 1.224, 1.312, 0.246, -1.265, -1.312, 0.246, -1.265, -1.312, 0.335, 2.898, -1.294, -0.336, 2.996, 1.021, -0.066, -2.707, 0.9, -0.336, -2.969, 1.312, 0.246, -1.265, -0.742, 0.777, 1.224, -1.312, 0.335, 2.898, -1.312, 0.246, -1.265, 0.742, 0.777, 1.224, 0.742, 0.769, -0.058, 1.312, 0.246, -1.265, -1.294, -0.336, 2.996, -1.312, 0.335, 2.898, 1.294, -0.336, 2.996, -1.312, 0.335, 2.898, -0.742, 0.777, 1.224, 1.312, 0.335, 2.898, -1.312, 0.246, -1.265, -1.294, -0.336, 2.996, -0.9, -0.336, -2.969, 0.9, -0.336, -2.969, 1.294, -0.336, 2.996, 1.312, 0.246, -1.265, -0.742, 0.769, -0.058, 0.742, 0.769, -0.058, -0.742, 0.777, 1.224, -1.312, 0.246, -1.265, -0.742, 0.769, -0.058, -1.294, -0.336, 2.996, -1.021, -0.066, -2.707, 1.312, 0.335, 2.898, 0.742, 0.777, 1.224, 0.742, 0.777, 1.224 )
 
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 0.8, 0.3, 1 )
+
 [sub_resource type="PointMesh" id=3]
 
 [sub_resource type="CubeMesh" id=4]
@@ -262,9 +265,6 @@ surfaces/11 = {
 "vertex_count": 991
 }
 
-[sub_resource type="BoxShape" id=23]
-extents = Vector3( 0.8, 0.2, 1 )
-
 [node name="car" type="RigidBody"]
 mass = 98.6
 can_sleep = false
@@ -275,6 +275,10 @@ script = ExtResource( 2 )
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.237, 0.0357038 )
 shape = SubResource( 1 )
+
+[node name="weight distrubution" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.479, 2.04702 )
+shape = SubResource( 2 )
 
 [node name="fr" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, -0.599999, 1.9 )
@@ -341,7 +345,7 @@ disabled = true
 [node name="spinning" type="Position3D" parent="fr/animation"]
 
 [node name="Cylinder2" type="MeshInstance" parent="fr/animation/spinning"]
-transform = Transform( 54, 0, 0, 0, -2.36042e-06, 54, 0, -54, -2.36042e-06, 0, 0, 0 )
+transform = Transform( 50.981, 0, 0, 0, -2.22845e-06, 50.981, 0, -50.981, -2.22845e-06, 0, 0, 0 )
 mesh = SubResource( 9 )
 material/0 = null
 
@@ -379,7 +383,7 @@ visible = false
 [node name="spinning" type="Position3D" parent="fl/animation"]
 
 [node name="Cylinder2" type="MeshInstance" parent="fl/animation/spinning"]
-transform = Transform( -54, 8.15377e-06, 3.56413e-13, 0, -2.36042e-06, 54, 8.15377e-06, 54, 2.36042e-06, 0, 0, 0 )
+transform = Transform( -50.981, 7.69792e-06, 3.36487e-13, 0, -2.22845e-06, 50.981, 7.69792e-06, 50.981, 2.22845e-06, 0, 0, 0 )
 mesh = SubResource( 9 )
 material/0 = null
 
@@ -451,7 +455,7 @@ visible = false
 [node name="spinning" type="Position3D" parent="rr/animation"]
 
 [node name="Cylinder2" type="MeshInstance" parent="rr/animation/spinning"]
-transform = Transform( 54, 0, 0, 0, -2.36042e-06, 54, 0, -54, -2.36042e-06, 0, 0, 0 )
+transform = Transform( 50.981, 0, 0, 0, -2.22845e-06, 50.981, 0, -50.981, -2.22845e-06, 0, 0, 0 )
 mesh = SubResource( 9 )
 material/0 = null
 
@@ -523,7 +527,7 @@ visible = false
 [node name="spinning" type="Position3D" parent="rl/animation"]
 
 [node name="Cylinder" type="MeshInstance" parent="rl/animation/spinning"]
-transform = Transform( -54, 8.15377e-06, 3.56413e-13, 0, -2.36042e-06, 54, 8.15377e-06, 54, 2.36042e-06, 0, 0, 0 )
+transform = Transform( -50.981, 7.69792e-06, 3.36487e-13, 0, -2.22845e-06, 50.981, 7.69792e-06, 50.981, 2.22845e-06, 0, 0, 0 )
 mesh = SubResource( 9 )
 material/0 = null
 
@@ -625,7 +629,3 @@ max_db = 0.0
 autoplay = true
 attenuation_filter_db = 0.0
 doppler_tracking = 2
-
-[node name="weight distrubution" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.661204, 1.73076 )
-shape = SubResource( 23 )

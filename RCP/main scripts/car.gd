@@ -20,7 +20,7 @@ var NoStall = false # Prevents engine from going under 100 RPM
 var GearAssistant = [20,0,0.944087,6000,5500] # Shift delay, Level (0 - 2), Speed Influence (will be automatically set), Downshift RPM Influence,  Upshift RPM Influence
 
 var GasSpeed = [0.25,0.25] # Release, Press
-var BrakeSpeed = [0.075,0.1] # Release, Press
+var BrakeSpeed = [0.1,0.05] # Release, Press
 var HandBrakeSpeed = [0.25,0.25] # Release, Press
 var ClutchSpeed = [0.25,0.25] # Release, Press
 
@@ -48,13 +48,14 @@ var DriveShaftGrip = 0.75 # Grip between the wheels and the driveshaft. (Must be
 var BiteStrength = 3.0 # i forgor
 
 # Needed to keep the powertrain from spazzing. But could sometimes be pretty messy to find balance between horrible sense of acceleration and instability.
-var DriveShaftStability = 12.5*DriveShaftGrip
-var ClutchStability = 35.0*ClutchGrip
-var StabilityThreshold = 110.0
+var ClutchStability = 0.5
+var StabilityThreshold = 150.0
+var StabiliseGears = 0.15
 
-#diff (WIP)
-var DiffType = "Limited"
-var DiffScale = 0.05
+#diff (EXPERIMENTAL)
+var Locking = 8.0
+var Preload = 0.1
+var CoastPreload = 0.0
 
 #engine
 var EngineWeight = 1.6 # Higher weight makes it more invulnerable to resistable forces but responds slowly.
@@ -91,7 +92,7 @@ var BackfireRate = 3.0
 var BackfireThreshold = 0.9
 
 #chassis
-var BrakeStrength = 50.0
+var BrakeStrength = 100.0
 
 #aero
 var Drag = 3.0/2.0
@@ -239,6 +240,11 @@ func _ready():
 	get_node("fr").set("SwayBar_Connection","fl")
 	get_node("rl").set("SwayBar_Connection","rr")
 	get_node("rr").set("SwayBar_Connection","rl")
+
+	get_node("fl").set("Differential_Connection","fr")
+	get_node("fr").set("Differential_Connection","fl")
+	get_node("rl").set("Differential_Connection","rr")
+	get_node("rr").set("Differential_Connection","rl")
 	#----------
 
 
