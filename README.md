@@ -1,6 +1,6 @@
 # Godot "Realistic" Car Physics (g-rcp)
-RPS13 Type X
-![Screenshot_2](https://user-images.githubusercontent.com/88580430/129445630-997a694e-ca3c-4e36-ad40-05776b02b415.png) Version 0.8.8 (Beta)
+Version 0.9.0 (Beta)
+
 # About
 This is a raycast-based "realistic" car simulator which could be used for games involving vehicles in a realistic manner.
 
@@ -14,7 +14,8 @@ There are comments within the scripts which may help. Further instructions on ho
 * Red car model by shutmen_16#6802 on discord
 
 ### Updates
-* Minor tyre physics correction
+* Some physics correction/update
+* Differential tuning options (Experimental)
 
 ### Current Acknowledged Issues
 * Incompatible with Bullet physics.
