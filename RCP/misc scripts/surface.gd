@@ -15,4 +15,4 @@ func _ready():
 		bumpy = 0.1
 		bumpfrequency = 0.5
 		bumpfrequencyrandomize = 1.0
-		griploss = 0.7
+		griploss = 1.0

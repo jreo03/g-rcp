@@ -1,8 +1,7 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://main scripts/wheel.gd" type="Script" id=1]
 [ext_resource path="res://main scripts/car.gd" type="Script" id=2]
-[ext_resource path="res://assets/rim.jpg" type="Texture" id=3]
 [ext_resource path="res://assets/engine.ogg" type="AudioStream" id=4]
 [ext_resource path="res://assets/skid.ogg" type="AudioStream" id=5]
 [ext_resource path="res://assets/dirt.ogg" type="AudioStream" id=6]
@@ -30,11 +29,6 @@ size = Vector3( 1, 1, 1 )
 [sub_resource type="BoxShape" id=7]
 extents = Vector3( 1.3, 0.5, 3 )
 
-[sub_resource type="SpatialMaterial" id=8]
-resource_name = "Wheels.000"
-albedo_texture = ExtResource( 3 )
-metallic = 1.0
-
 [sub_resource type="ArrayMesh" id=9]
 blend_shape_mode = 0
 surfaces/0 = {
@@ -44,67 +38,11 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 372,
-"material": SubResource( 8 ),
 "name": "Wheels.000",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 315
 }
-
-[sub_resource type="SpatialMaterial" id=10]
-albedo_color = Color( 0.698039, 0, 0, 1 )
-metallic_specular = 1.0
-roughness = 0.5
-
-[sub_resource type="SpatialMaterial" id=11]
-resource_name = "Outline.001"
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=12]
-resource_name = "WindowGuard"
-albedo_color = Color( 0.01, 0.01, 0.01, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=13]
-resource_name = "Black.001"
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=14]
-resource_name = "Mirror.001"
-albedo_color = Color( 0.5, 0.5, 0.5, 1 )
-
-[sub_resource type="SpatialMaterial" id=15]
-resource_name = "Signal.001"
-albedo_color = Color( 0.7, 0.25, 0, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=16]
-resource_name = "Exhaust.001"
-albedo_color = Color( 0.8, 0.8, 0.8, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=17]
-resource_name = "RearLight"
-albedo_color = Color( 0.4, 0, 0, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=18]
-resource_name = "BrakeLight.001"
-albedo_color = Color( 0.4, 0, 0, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=19]
-resource_name = "ReverseLight.001"
-albedo_color = Color( 0.8, 0.8, 0.8, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=20]
-resource_name = "Light.001"
-albedo_color = Color( 0.8, 0.8, 0.8, 1 )
-metallic = 1.0
-
-[sub_resource type="SpatialMaterial" id=21]
-resource_name = "Window.001"
 
 [sub_resource type="ArrayMesh" id=22]
 blend_shape_mode = 0
@@ -115,7 +53,6 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 4902,
-"material": SubResource( 10 ),
 "name": "Color",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -128,7 +65,6 @@ surfaces/1 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 204,
-"material": SubResource( 11 ),
 "name": "Outline.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -141,7 +77,6 @@ surfaces/2 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 54,
-"material": SubResource( 14 ),
 "name": "Mirror.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -154,7 +89,6 @@ surfaces/3 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 198,
-"material": SubResource( 15 ),
 "name": "Signal.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -167,7 +101,6 @@ surfaces/4 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 384,
-"material": SubResource( 16 ),
 "name": "Exhaust.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -180,7 +113,6 @@ surfaces/5 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 48,
-"material": SubResource( 17 ),
 "name": "RearLight",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -193,7 +125,6 @@ surfaces/6 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 30,
-"material": SubResource( 18 ),
 "name": "BrakeLight.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -206,7 +137,6 @@ surfaces/7 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 24,
-"material": SubResource( 19 ),
 "name": "ReverseLight.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -219,7 +149,6 @@ surfaces/8 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 60,
-"material": SubResource( 20 ),
 "name": "Light.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -232,7 +161,6 @@ surfaces/9 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 252,
-"material": SubResource( 21 ),
 "name": "Window.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -245,7 +173,6 @@ surfaces/10 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 1446,
-"material": SubResource( 12 ),
 "name": "WindowGuard",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -258,7 +185,6 @@ surfaces/11 = {
 "blend_shape_data": [  ],
 "format": 97539,
 "index_count": 1146,
-"material": SubResource( 13 ),
 "name": "Black.001",
 "primitive": 4,
 "skeleton_aabb": [  ],
@@ -277,7 +203,7 @@ transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.237, 0.0357038 )
 shape = SubResource( 1 )
 
 [node name="weight distrubution" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.479, 2.04702 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.292, 1.9 )
 shape = SubResource( 2 )
 
 [node name="fr" type="RayCast" parent="."]
