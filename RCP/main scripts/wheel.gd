@@ -1,7 +1,5 @@
 extends RayCast
 
-var woffset = 0.1 # offset the wheels above the ground, useful when you have fake shadows going on
-
 # external (could be adjusted for individual wheels by another script)
 var tyre_code = "0250-185-060-14" # the first 4-row is the grip amount. set to "0250" by default
 var roughness = 0.25
@@ -89,6 +87,7 @@ var patch = Vector2(0,0)
 var scrub = 0.0
 var dist = 0.0
 var contactforce = 0.0
+var brakeforce = 0.0
 var currentconnection = 0.0
 var slip = 0.0
 var slipz = 0.0
@@ -97,7 +96,6 @@ var brokencontactspin = 0.0
 var skidspin = 0.0
 var skid = 0.0
 var skid2 = 0.0
-var brakeforce = 0.0
 
 var currentstif = 0.0
 var currentelast = 0.0
@@ -150,7 +148,7 @@ func refreshtyres():
 	thread = 1.0
 	
 	if Connection>0:
-		get_parent().GearAssistant[2] = wheelsize*2.0
+		get_parent().GearAssistant[2] = wheelsize
 
 
 func _ready():
@@ -161,6 +159,9 @@ func _ready():
 	v1.global_transform.origin = global_transform.origin
 	v2.global_transform.origin = get_node("geometry").global_transform.origin
 
+	if WheelScale:
+		wheelsize = WheelScale
+		grip = TyreGrip*250
 
 func _physics_process(delta):
 #	print(get_parent().get_node("test").linear_velocity)
@@ -187,6 +188,7 @@ func _physics_process(delta):
 	v1.linear_velocity = -(v1.global_transform.origin -  global_transform.origin)*rigidity
 	v2.linear_velocity = -(v2.global_transform.origin -  get_node("geometry").global_transform.origin)*tyrerigidity
 	get_node("contact_axis/force").translation = Vector3(0,0,0)
+	get_node("contact_axis/force_susp").translation = Vector3(0,0,0)
 
 	var rotation_za = get_node("axis").rotation_degrees.z
 	var w = -((dist-StrutOffset)*Suspension_Geometry)/(translation.x/deg2rad(90.0))
@@ -225,8 +227,6 @@ func _physics_process(delta):
 		toe = -toe
 		
 	rotation_degrees.y = st -toe
-#	if translation.z>0:
-#		$animation.rotation_degrees.y = -rotation_degrees.y +get_parent().steer2*40.0
 
 	# differential
 	if not Differential_Connection == "":
@@ -264,7 +264,7 @@ func _physics_process(delta):
 #	print(currentconnection)
 
 	# ----
-	if is_colliding() and not get_parent().teleporting:
+	if is_colliding():
 
 		#suspension
 		get_node("geometry").global_transform.origin = get_collision_point()
@@ -303,25 +303,19 @@ func _physics_process(delta):
 		var scvelo = rayvelocity.y
 		if scvelo>0.0:
 			scvelo *= damp
-			
-		var rest2 = Rest
 
-		if get_parent().get_parent().name == "menu":
-			if get_parent().get_parent().mainmenu:
-				rest2 += rand_range(-0.025,0.025)
-
-		compress2 = (get_node("geometry").translation.y-cast_current -rest2)*currentelast
+		compress2 = (get_node("geometry").translation.y-cast_current -Rest)*currentelast
 #		compress2 *= 1.0
 		if compress2<0:
 			compress2 = 0
 			
-		if (get_node("geometry").translation.y-cast_current)>rest2 :
+		if (get_node("geometry").translation.y-cast_current)>Rest :
 			compress = (scvelo - compress2)*currentstif
 		if compress>0:
 			compress = 0
 			
 		wheelcompression = -compress
-		get_node("contact_axis/force").translation.y = -compress
+		get_node("contact_axis/force_susp").translation.y = -compress
 		
 		tyrecompressed = (((wheelcompression)/1000.0)*tyrecompressrate)*(-(wheelangle)+1)
 		tyrecompressed *= 1.0 -wheelangle
@@ -478,11 +472,14 @@ func _physics_process(delta):
 			var unitd = 0.0015/(mass/currentgrip)
 			offsettedzw = (currentgrip*wheelweight)/unita
 			
+#			if contactforce == 0.0:
+#				longimode = 1.0
+			
 			offsettedz = ((abs(wv)*(lateraldamp/unitb))/(1.0/4.0))*longimode + offsettedzw*(-(longimode)+1.0)
 			offsettedx = ((thevelo*(lateraldamp/unitb))/(1.0/4.0))
-
+			
 			offsettedz *= abs(wv)/(abs(wv) +1.0)
-
+			
 			if offsettedz<unitc/wheelweight:
 				offsettedz = unitc/wheelweight
 			if offsettedx<unitd/wheelweight:
@@ -527,6 +524,8 @@ func _physics_process(delta):
 			elif wsing>0.75/(cgroundmaterial +1.0):
 				wsing = 0.75/(cgroundmaterial +1.0)
 				
+			wsing = 0.0
+				
 #			print(wsing)
 			var going = rayvelocity2velocity
 				
@@ -549,7 +548,7 @@ func _physics_process(delta):
 				
 #			going = 1.0
 				
-			wsing = 0.0
+#			wsing = 1.0
 
 			var siding = abs(c_rayvelocity2.x/(rayvelocity2velocity +1.0))
 			siding *= 5.0
@@ -583,9 +582,11 @@ func _physics_process(delta):
 			var method1 = Vector2(Vector2(abs(distz),dapedx).length() -offsettedz,Vector2(dapedz*1.0,abs(distx)).length())
 			var method2 = Vector2(abs(distz) + dapedx - offsettedz,dapedz*1.0 + abs(distx))
 			var methodw = Vector2(abs(distz),dapedx*2.0).length() -offsettedz
+
 #			var methodtest = Vector2(abs(distz),abs(distx)).length()
 
 #			wsing = 1.0
+
 			var dampz = method1.x*(-(wsing)+1.0) + method2.x*wsing
 			var dampw = methodw*1.0
 			var dampx = method1.y*(-(wsing)+1.0) + method2.y*wsing
@@ -761,7 +762,6 @@ func _physics_process(delta):
 	var clutchon = get_parent().get("clutchon")*get_parent().get("clutchon")
 
 	if not get_parent().get("gear") == 0 and get_parent().dsweightrun>0	:
-		var stabinfluence = 1.0/(get_parent().dsweightrun/2.0)
 		var dist = 0.0
 		if get_parent().gear == -1:
 			dist = abs(get_parent().GearRatios[0] - get_parent().ReverseRatio)
@@ -770,10 +770,6 @@ func _physics_process(delta):
 		var stab = get_parent().ClutchStability -(dist*get_parent().StabiliseGears)
 		if stab<0:
 			 stab = 0
-			
-		stab *= 1.0-((get_parent().throttle*0.4)*stabinfluence)
-		
-		stab *= stabinfluence
 
 		var css = stab*35.0
 		var dss = stab*12.5
@@ -785,10 +781,6 @@ func _physics_process(delta):
 		
 		css *= rat/100.0
 		dss *= rat/100.0
-		if css<1.0:
-			css = 1.0
-		if dss<1.0:
-			dss = 1.0
 			
 		var bite1 = tvd/css
 		var bite2 = tvd/dss
@@ -836,8 +828,6 @@ func _physics_process(delta):
 		wv *= (1.0-brake)*0.5
 		brakeforce -= (rayvelocity2.z+contactforce)
 	# -----------------
-	
-	get_node("geometry").translation.y += woffset
 		
 	var weight = get_parent().mass
 
@@ -862,7 +852,5 @@ func _physics_process(delta):
 	get_node("animation").global_transform.origin = get_node("geometry").global_transform.origin
 #	get_node("animation").global_transform.origin = orgin
 	get_node("animation").translation.y += cast_to.y-cast_current
-	if get_parent().get_parent().name == "menu" and get_parent().get_parent().get("mainmenu"):
-		get_node("animation/spinning").rotation_degrees.x += 30
-	else:
-		get_node("animation/spinning").rotation_degrees.x += wv
+	get_node("animation/spinning").rotation_degrees.x += wv
+	
