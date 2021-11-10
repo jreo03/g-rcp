@@ -1,8 +1,14 @@
 extends RayCast
 
 # external (could be adjusted for individual wheels by another script)
-var tyre_code = "1150-185-060-14-060"
+var tyre_code = "0250-185-060-14" # the first 4-row is the grip amount. set to "0250" by default
 var roughness = 0.25
+var forward_grip_deficiency = 1.0
+var backward_grip_deficiency = 4.0
+
+var WheelScale = 0.5
+var TyreGrip = 1.0
+var RealisticTyres = false # uses tyre_code to determine grip and wheel scale
 
 var stiffness = 475.0 # Spring stiffness
 var elasticity = 10.0 # Spring rebound rate
@@ -41,7 +47,7 @@ var grip = int(tyre_code.substr(0,4))
 var tyrewidth = int(tyre_code.substr(5,3))
 var tyrear = int(tyre_code.substr(9,4))
 var rimsize = int(tyre_code.substr(13,2))
-var tread = int(tyre_code.substr(16,3))
+var tread = tyrear
 
 
 var wheelsize =  (( float(tyrewidth)*((float(tyrear)*2.0)/100.0) + float(rimsize)*25.4 )*0.003269)/4.0
@@ -81,6 +87,7 @@ var patch = Vector2(0,0)
 var scrub = 0.0
 var dist = 0.0
 var contactforce = 0.0
+var brakeforce = 0.0
 var currentconnection = 0.0
 var slip = 0.0
 var slipz = 0.0
@@ -152,6 +159,9 @@ func _ready():
 	v1.global_transform.origin = global_transform.origin
 	v2.global_transform.origin = get_node("geometry").global_transform.origin
 
+	if WheelScale:
+		wheelsize = WheelScale
+		grip = TyreGrip*250
 
 func _physics_process(delta):
 #	print(get_parent().get_node("test").linear_velocity)
@@ -178,6 +188,7 @@ func _physics_process(delta):
 	v1.linear_velocity = -(v1.global_transform.origin -  global_transform.origin)*rigidity
 	v2.linear_velocity = -(v2.global_transform.origin -  get_node("geometry").global_transform.origin)*tyrerigidity
 	get_node("contact_axis/force").translation = Vector3(0,0,0)
+	get_node("contact_axis/force_susp").translation = Vector3(0,0,0)
 
 	var rotation_za = get_node("axis").rotation_degrees.z
 	var w = -((dist-StrutOffset)*Suspension_Geometry)/(translation.x/deg2rad(90.0))
@@ -304,7 +315,7 @@ func _physics_process(delta):
 			compress = 0
 			
 		wheelcompression = -compress
-		get_node("contact_axis/force").translation.y = -compress
+		get_node("contact_axis/force_susp").translation.y = -compress
 		
 		tyrecompressed = (((wheelcompression)/1000.0)*tyrecompressrate)*(-(wheelangle)+1)
 		tyrecompressed *= 1.0 -wheelangle
@@ -313,25 +324,57 @@ func _physics_process(delta):
 
 		if tyrecompressed<0.0:
 			tyrecompressed = 0.0
-		elif tyrecompressed>tyrelc:
-			tyrecompressed = tyrelc
+#		elif tyrecompressed>tyrelc:
+#			tyrecompressed = tyrelc
 
 		if tyrecompressedscrub<0.0:
 			tyrecompressedscrub = 0.0
 
 		var decline = (tyrecompressed*tyrecompressed)*(0.8/tyrelc) - (0.43/tyrelc)
 		
-		tyrecompressedgrip = tyrecompressed*2.0 - decline
+		tyrecompressedgrip = tyrecompressed*2.5
 		
 		var sliped = 1.0
 
+		var predistz = c_rayvelocity2.z - (wv*wheelsize)
+
 		if tyrecompressed>0.0:
-			sliped = max(forcedata[0],forcedata[1])/(tyrecompressed*20.0)
-		if sliped>1.0:
-			sliped = 1.0
+			sliped = max(forcedata[0],forcedata[1])/(tyrecompressed*10.0)
+		if predistz>0.0:
+			if sliped>backward_grip_deficiency:
+				sliped = backward_grip_deficiency
+			else:
+				sliped *= sliped/backward_grip_deficiency
+		else:
+			if sliped>forward_grip_deficiency:
+				sliped = forward_grip_deficiency
+			else:
+				sliped *= sliped
+				
+#		sliped = 0.0
 		
-		currentgrip = (((( (float(grip)*((float(tyrewidth)/(float(tyrewidth)/2))/1.5))/(get_parent().mass/150) )/(sliped*((roughness*(-(cgroundmaterial)+1))) +1))/(griploss+1))/1.1)*(tyrecompressedgrip*tyrecompressiongripmultiply) *0.825
-		gripscrub =  (((( (float(grip)*((float(tyrewidth)/(float(tyrewidth)/2))/1.5))/(get_parent().mass/150) )/(sliped*((roughness*(-(cgroundmaterial)+1))) +1))/(griploss+1))/1.1)*(tyrecompressedscrub*tyrecompressiongripmultiply) *0.825
+#		print(sliped)
+		
+			
+#		currentgrip = (((( (float(grip)*((float(tyrewidth)/(float(tyrewidth)/2))/1.5))/(get_parent().mass/150) )/(sliped*((roughness*(-(cgroundmaterial)+1))) +1))/(griploss+1))/1.1)*(tyrecompressedgrip*tyrecompressiongripmultiply) *0.825
+		var griplimit = ((tyrecompressedgrip*float(grip))*2.5)/(sliped*((roughness*(-(cgroundmaterial)+1))) +1)
+
+		griplimit /= griploss +1.0
+
+		var deficiency = float((get_parent().mass*2.0)-float(tyrewidth))
+		deficiency /= 500.0
+#		print(deficiency)
+		if deficiency>0.9999:
+			deficiency = 0.9999
+		
+		if deficiency<0.0 or RealisticTyres == false:
+			deficiency = 0.0
+
+		currentgrip = griplimit*(1.0 - deficiency)
+			
+
+		gripscrub =  griplimit
+#		gripscrub *= 0.0
 		#-----
 		
 		
@@ -341,6 +384,15 @@ func _physics_process(delta):
 			contactforce = limt
 		elif contactforce<-limt:
 			contactforce = -limt
+			
+		if contactforce>0.0:
+			contactforce += brakeforce
+			if contactforce<0.0:
+				contactforce = 0.0
+		else:
+			contactforce += brakeforce
+			if contactforce>0.0:
+				contactforce = 0.0
 		
 		var thectf = contactforce
 
@@ -350,21 +402,33 @@ func _physics_process(delta):
 			 patch.x = maxtravel
 		elif patch.x<-maxtravel:
 			 patch.x = -maxtravel
+			
 		patch.y += (c_rayvelocity2.z - (wv*wheelsize))/5.0
 		if patch.y>maxtravel:
 			 patch.y = maxtravel
 		elif patch.y<-maxtravel:
 			 patch.y = -maxtravel
-
+		
 		patch /= abs(wv)/10.0 +1.0
 
+		var br = (brakeforce/100.0)
+		
+		if br>0.0:
+			var infl = 1.0/br
+			if infl<1.0:
+				infl = 1.0
+			patch.y /= infl
+		else:
+			patch.y *= 0.95
+		
 		var distz = c_rayvelocity2.z - ((wv+(thectf))*wheelsize) + patch.y
 		var distzw = c_rayvelocity2.z - ((wv+(thectf))*wheelsize)
 		var distx = c_rayvelocity2.x + patch.x
 		var distz3 = c_rayvelocity2.z - (wv*wheelsize)
 		var distz4 = c_rayvelocity2.z - ((wv+(thectf*-0.5))*wheelsize) + patch.y
 		var slip = abs(distz) + abs(distx)
-		slipz = max(abs(distx),abs(distz))
+#		slipz = max(abs(distx),abs(distz))
+		slipz = abs(distx*2.5) + abs(distz)
 		var longimode = rayvelocity2velocity - abs(wv)*wheelsize -currentgrip/1000.0
 		if longimode<0:
 			longimode = 0
@@ -401,17 +465,21 @@ func _physics_process(delta):
 			var thevelo = (abs(wv)/1.5)/(slip2 +1.0)
 #			thevelo /= thevelo*0.001 +1.0
 			var mass = get_parent().mass/100
-			var unita = 40.0*mass
+			var unita = 75.0*mass
+			unita /= unita*0.0107 +1.0
 			var unitb = float(tyrewidth)/8.0
 			var unitc = 1.0
 			var unitd = 0.0015/(mass/currentgrip)
 			offsettedzw = (currentgrip*wheelweight)/unita
 			
+#			if contactforce == 0.0:
+#				longimode = 1.0
+			
 			offsettedz = ((abs(wv)*(lateraldamp/unitb))/(1.0/4.0))*longimode + offsettedzw*(-(longimode)+1.0)
 			offsettedx = ((thevelo*(lateraldamp/unitb))/(1.0/4.0))
-			if wv == 0.0:
-				offsettedz = offsettedx
-
+			
+			offsettedz *= abs(wv)/(abs(wv) +1.0)
+			
 			if offsettedz<unitc/wheelweight:
 				offsettedz = unitc/wheelweight
 			if offsettedx<unitd/wheelweight:
@@ -455,6 +523,8 @@ func _physics_process(delta):
 				wsing = 0.0
 			elif wsing>0.75/(cgroundmaterial +1.0):
 				wsing = 0.75/(cgroundmaterial +1.0)
+				
+			wsing = 0.0
 				
 #			print(wsing)
 			var going = rayvelocity2velocity
@@ -512,6 +582,7 @@ func _physics_process(delta):
 			var method1 = Vector2(Vector2(abs(distz),dapedx).length() -offsettedz,Vector2(dapedz*1.0,abs(distx)).length())
 			var method2 = Vector2(abs(distz) + dapedx - offsettedz,dapedz*1.0 + abs(distx))
 			var methodw = Vector2(abs(distz),dapedx*2.0).length() -offsettedz
+
 #			var methodtest = Vector2(abs(distz),abs(distx)).length()
 
 #			wsing = 1.0
@@ -628,7 +699,7 @@ func _physics_process(delta):
 		brslip = 0
 	elif get_parent().get("brake")>0.5 and get_parent().get("ABS")[4] and rayvelocity2velocity>get_parent().get("ABS")[2]:
 		get_parent().set("absflashed", true)
-	
+			
 	var absenabled = false
 	
 	if rayvelocity2velocity>get_parent().get("ABS")[2]:
@@ -637,14 +708,22 @@ func _physics_process(delta):
 	var br = 0.0
 			
 	if absenabled:
-		var brakae = get_parent().get("brake")
-		if brakae>get_parent().get("ABS")[3]:
-			 brakae = get_parent().get("ABS")[3]
-		br = brakae*(-(brslip*(get_parent().get("ABS")[0]))+1)
+		if get_parent().get("ABS")[5]:
+			var brakae = get_parent().get("brake")
+			if brakae>get_parent().get("ABS")[3]:
+				 brakae = get_parent().get("ABS")[3]
+			br = brakae*(-(brslip*(get_parent().get("ABS")[0]))+1)
+		else:
+			get_parent().brakethreshold += brslip/50.0
+			br = (get_parent().get("brake")*get_parent().get("brake")) - get_parent().brakethresholdrun
+			br *= get_parent().get("ABS")[3]
 	else:
-		br = get_parent().get("brake")
+		br = get_parent().get("brake")*get_parent().get("brake")
 
-	var brake = (br*BrakeInfluence)+(get_parent().get("handbrake")*HandbrakeInfluence)
+	var brake = (br*BrakeInfluence)+((get_parent().get("handbrake"))*HandbrakeInfluence)
+	var brake2 = brake
+	
+#	brake *= brake
 		
 	var espb = 0.0
 		
@@ -668,7 +747,9 @@ func _physics_process(delta):
 
 	brake += espb +tcs
 
-	if brake>1:
+	if brake<0:
+		brake = 0
+	elif brake>1:
 		brake = 1
 	
 	#-----
@@ -735,29 +816,41 @@ func _physics_process(delta):
 	#---------------
 
 	# brake repositioned
-	if brake>0.01:
-		var bd = abs(wv/(get_parent().get("BrakeStrength")*brake))
-		if wv>get_parent().get("BrakeStrength")*brake or wv<-get_parent().get("BrakeStrength")*brake:
-			var force = wv/(bd +1)
-			wv -= force
-			contactforce /= force +1.0
-		else:
-			wv = 0.0
-			contactforce = 0.0
-	#----------------
-	
+	brakeforce = 0.0
+	var brakeforcec = get_parent().get("BrakeStrength")*(brake*BrakeInfluence)
+	if wv>brakeforcec:
+		wv -= brakeforcec
+		brakeforce -= brakeforcec
+	elif wv<-brakeforcec:
+		wv += brakeforcec
+		brakeforce += brakeforcec
+	else:
+		wv *= (1.0-brake)*0.5
+		brakeforce -= (rayvelocity2.z+contactforce)
+	# -----------------
+		
 	var weight = get_parent().mass
 
-#	print(rayvelocity2.y)
+	var fuckign = 1.0
 
-#	get_node("geometry").translation.x += 1.0
+	if get_node("contact_axis/force").translation.z<0.0 and translation.z<0.0 or get_node("contact_axis/force").translation.z>0.0 and translation.z>0.0:
+		fuckign /= ( (abs(get_node("contact_axis/force").translation.z/get_parent().mass)/get_parent().mass)*abs(get_node("contact_axis/force").translation.x/get_parent().mass)/1.0 +1.0)
+	var def = get_node("geometry").translation
+	get_node("geometry").global_transform.origin = get_parent().global_transform.origin
 
-	get_parent().apply_impulse((get_node("geometry").global_transform.origin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force").global_transform.origin-global_transform.origin)/weight)
-#	get_parent().apply_impulse(get_node("geometry").global_transform.origin-get_parent().global_transform.origin,Vector3(0,get_node("contact_axis/force").translation.y,0)/weight)
+	get_node("geometry").translation -= (get_node("geometry").translation - def)*fuckign
 	
-#	get_node("geometry").translation /= 5.0
+	var orgin = get_node("geometry").global_transform.origin
+
+	get_node("geometry").translation = def
+
+	get_parent().apply_impulse((orgin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force").global_transform.origin-global_transform.origin)/weight)
+
+	get_parent().apply_impulse((global_transform.origin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force_susp").global_transform.origin-global_transform.origin)/weight)
+
 	# animations
 	get_node("animation").global_transform.origin = get_node("geometry").global_transform.origin
+#	get_node("animation").global_transform.origin = orgin
 	get_node("animation").translation.y += cast_to.y-cast_current
 	get_node("animation/spinning").rotation_degrees.x += wv
 	
