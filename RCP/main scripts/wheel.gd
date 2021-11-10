@@ -846,7 +846,7 @@ func _physics_process(delta):
 
 	get_parent().apply_impulse((orgin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force").global_transform.origin-global_transform.origin)/weight)
 
-	get_parent().apply_impulse((global_transform.origin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force_susp").global_transform.origin-global_transform.origin)/weight)
+	get_parent().apply_impulse((get_node("geometry").global_transform.origin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force_susp").global_transform.origin-global_transform.origin)/weight)
 
 	# animations
 	get_node("animation").global_transform.origin = get_node("geometry").global_transform.origin
