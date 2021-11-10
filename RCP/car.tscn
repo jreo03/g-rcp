@@ -203,7 +203,7 @@ transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.237, 0.0357038 )
 shape = SubResource( 1 )
 
 [node name="weight distrubution" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.291693, 1.591 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.292, 1.9 )
 shape = SubResource( 2 )
 
 [node name="fr" type="RayCast" parent="."]
@@ -280,8 +280,6 @@ visible = false
 
 [node name="force" type="Position3D" parent="fr/contact_axis"]
 
-[node name="force_susp" type="Position3D" parent="fr/contact_axis"]
-
 [node name="fl" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, -0.599999, 1.9 )
 enabled = true
@@ -319,8 +317,6 @@ material/0 = null
 visible = false
 
 [node name="force" type="Position3D" parent="fl/contact_axis"]
-
-[node name="force_susp" type="Position3D" parent="fl/contact_axis"]
 
 [node name="velocity" type="RigidBody" parent="fl"]
 visible = false
@@ -394,8 +390,6 @@ visible = false
 
 [node name="force" type="Position3D" parent="rr/contact_axis"]
 
-[node name="force_susp" type="Position3D" parent="rr/contact_axis"]
-
 [node name="velocity" type="RigidBody" parent="rr"]
 visible = false
 collision_layer = 524288
@@ -467,8 +461,6 @@ material/0 = null
 visible = false
 
 [node name="force" type="Position3D" parent="rl/contact_axis"]
-
-[node name="force_susp" type="Position3D" parent="rl/contact_axis"]
 
 [node name="velocity" type="RigidBody" parent="rl"]
 visible = false
