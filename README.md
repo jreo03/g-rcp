@@ -16,7 +16,7 @@ This project isn't novice-friendly.
 ### Updates
 * Some physical fixes
 * Braking system reworked
-* Set keyboard steering and automatic-shifting by default
+* Set keyboard steering, automatic-shifting, and rear-wheel-drive by default
 * Removed materials and textures from the car model to better indicate it being a placeholder asset
 
 ### Current Acknowledged Issues
