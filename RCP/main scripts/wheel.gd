@@ -188,7 +188,6 @@ func _physics_process(delta):
 	v1.linear_velocity = -(v1.global_transform.origin -  global_transform.origin)*rigidity
 	v2.linear_velocity = -(v2.global_transform.origin -  get_node("geometry").global_transform.origin)*tyrerigidity
 	get_node("contact_axis/force").translation = Vector3(0,0,0)
-	get_node("contact_axis/force_susp").translation = Vector3(0,0,0)
 
 	var rotation_za = get_node("axis").rotation_degrees.z
 	var w = -((dist-StrutOffset)*Suspension_Geometry)/(translation.x/deg2rad(90.0))
@@ -315,7 +314,7 @@ func _physics_process(delta):
 			compress = 0
 			
 		wheelcompression = -compress
-		get_node("contact_axis/force_susp").translation.y = -compress
+		get_node("contact_axis/force").translation.y = -compress
 		
 		tyrecompressed = (((wheelcompression)/1000.0)*tyrecompressrate)*(-(wheelangle)+1)
 		tyrecompressed *= 1.0 -wheelangle
@@ -524,7 +523,7 @@ func _physics_process(delta):
 			elif wsing>0.75/(cgroundmaterial +1.0):
 				wsing = 0.75/(cgroundmaterial +1.0)
 				
-			wsing = 0.0
+#			wsing = 0.0
 				
 #			print(wsing)
 			var going = rayvelocity2velocity
@@ -831,22 +830,7 @@ func _physics_process(delta):
 		
 	var weight = get_parent().mass
 
-	var momentumidk = 1.0
-
-	if get_node("contact_axis/force").translation.z<0.0 and translation.z<0.0 or get_node("contact_axis/force").translation.z>0.0 and translation.z>0.0:
-		momentumidk /= ( (abs(get_node("contact_axis/force").translation.z/get_parent().mass)/get_parent().mass)*abs(get_node("contact_axis/force").translation.x/get_parent().mass)/1.0 +1.0)
-	var def = get_node("geometry").translation
-	get_node("geometry").global_transform.origin = get_parent().global_transform.origin
-
-	get_node("geometry").translation -= (get_node("geometry").translation - def)*momentumidk
-	
-	var orgin = get_node("geometry").global_transform.origin
-
-	get_node("geometry").translation = def
-
-	get_parent().apply_impulse((orgin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force").global_transform.origin-global_transform.origin)/weight)
-
-	get_parent().apply_impulse((get_node("geometry").global_transform.origin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force_susp").global_transform.origin-global_transform.origin)/weight)
+	get_parent().apply_impulse((get_node("geometry").global_transform.origin-get_parent().global_transform.origin)*1.0,(get_node("contact_axis/force").global_transform.origin-global_transform.origin)/weight)
 
 	# animations
 	get_node("animation").global_transform.origin = get_node("geometry").global_transform.origin
